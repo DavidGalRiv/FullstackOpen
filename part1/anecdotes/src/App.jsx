@@ -15,17 +15,21 @@ const App = () => {
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0))
 
-
   const getRandomAnecdote = () => {
     const randomIndex = Math.floor(Math.random() * anecdotes.length)
+    console.log(`New anecdote selected: Index ${randomIndex} - "${anecdotes[randomIndex]}"`)
     setSelected(randomIndex)
   }
 
   const voteAnecdote = () => {
     const copy = [...votes]
     copy[selected] += 1
+    console.log(`Anecdote voted: Index ${selected} - "${anecdotes[selected]}" | New vote count: ${copy[selected]}`)
     setVotes(copy)
   }
+
+  console.log(`Currently displayed anecdote: Index ${selected} - "${anecdotes[selected]}"`)
+  console.log(`Current votes array:`, votes)
 
   return (
     <div>
@@ -38,7 +42,6 @@ const App = () => {
       <h1>Anecdote with most votes</h1>
       <p>{anecdotes[votes.indexOf(Math.max(...votes))]}</p>
       <p>Votes: {Math.max(...votes)}</p>
-      
     </div>
   )
 }
