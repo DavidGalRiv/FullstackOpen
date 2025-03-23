@@ -27,18 +27,20 @@ const Total = ({parts}) => {
             <strong>Total of {total} exercises</strong>
         </p>
     )
-
 }
 
-const Course = ({course}) => {
+const Course = ({courses}) => {
     return(
         <div>
-            <Header name = {course.name}/>
-            <Content parts = {course.parts}/>
-            <Total parts = {course.parts}/>
+            {courses.map(course => (
+                <div key = {course.id}>
+                    <Header name = {course.name}/>
+                    <Content parts = {course.parts}/>
+                    <Total parts = {course.parts}/>
+                </div>
+            ))}
         </div>
     )
 }
-
 
 export default Course
