@@ -1,30 +1,20 @@
-import {useState, useEffect } from 'react'
-import axios from 'axios';
+import {useState, useEffect } from "react"
+import phoneBookService from "./services/phonebook"
 import Filter from "./components/Filter"
 import PersonForm from "./components/PersonForm"
 import Numbers from "./components/Numbers"
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ])
 
-  const [newName, setNewName] = useState('')
-  const [newNumber,setNewNumber] = useState('')
-  const [search, setSearch] = useState('')
+  const [persons, setPersons] = useState([]) 
+  const [newName, setNewName] = useState("")
+  const [newNumber,setNewNumber] = useState("")
+  const [search, setSearch] = useState("")
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
-      .then(response => {
-        console.log("Server response:", response.data);
-        setPersons(response.data)
-      })
-      .catch(error => {
-        console.error("Error fetching data: ", error)
-      })
+    phoneBookService.getAll()
+    .then(persons => setPersons(persons))
+    .catch(error => alert(`Server not found, please check again the url\nerror ${error}`))
   }, [])
   
   const handleNameChange = (event) => {
@@ -41,25 +31,69 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    if(persons.some(person => person.name === newName)){
-      alert(`${newName} is already added to the phonebook`)
-      return
-    }
-    const newPerson = {name: newName, number: newNumber}
-    axios.post('http://localhost:3001/persons', newPerson)
-      .then(response => {
-        setPersons([...persons, response.data]);
-        setNewName('');
-        setNewNumber('');
+    if(persons.reduce((found, person) => {
+      return found || person.name == newName
+    },false
+    )){
+      let personId = persons.find(person => person.name === newName).id
+      updatePerson(personId)
+    }else if(persons.reduce((found, person) => {
+      return found || person.number == newNumber
+    },false
+    )){
+      alert("The phone number is already in the phonebook")
+    }else if(newName === "" || newNumber === ""){
+      alert("Please complete both the person's name and phone number before proceeding")
+    }else{
+      const personObject = {
+        name: newName,
+        number: newNumber
+      }
+      phoneBookService.create(personObject)
+      .then(newPerson => {
+        setPersons(persons.concat(newPerson))
+        setNewName("")
+        setNewNumber("")
       })
-      .catch(error => {
-        console.error("Error adding person: ", error);
-      });
+      .catch(error => alert(`Something went wrong: (\nerror: ${error})`))
+    }
   }
-  
+
+  const updatePerson = (personId) => {
+    if(newNumber !== "" && !persons.reduce((found, person) => {
+      found || person.number == newNumber
+    },false)){
+      const oldPerson = persons.find(person => person.id === personId)
+      if(confirm(`Do you want to update ${oldPerson.name}'s number?`)){
+        const updatedPerson = {... oldPerson, number: newNumber}
+        phoneBookService.update(personId, updatedPerson)
+        .then(response => {
+          setPersons(persons.map(person => person.id === personId ? updatedPerson : person ))
+        })
+        .catch(error => alert(`Person could not be found in server\nerror: ${error}`))
+      }
+    } else if(newNumber === ""){
+      alert("Please complete both the person's name and phone number before proceeding")
+    }else{
+      alert("Phone already in the phonebook")
+    }
+  }
+
+  const deletePerson = (personId) => {
+    return() => {
+      if(confirm("Are you sure you want to delete this person?")){
+        phoneBookService.remove(personId)
+        .then(response => {
+          setPersons(persons.filter(person => person.id != personId))
+        })
+        .catch(error => alert(`Person could not be found in server\nerror: ${error}`))      }
+    }
+  }
+
   const filteredPersons = persons.filter(person =>
     person.name.toLowerCase().includes(search.toLowerCase())
   )
+  
 
   return (
     <div>
@@ -76,7 +110,7 @@ const App = () => {
       />
       
       <h3>Numbers</h3>
-      <Numbers persons = {filteredPersons}/>
+      <Numbers persons = {filteredPersons} deletePerson={deletePerson}/>
     </div>
   )
 }

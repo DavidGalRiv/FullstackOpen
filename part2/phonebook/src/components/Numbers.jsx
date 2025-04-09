@@ -1,8 +1,14 @@
-const Numbers = ({persons}) => (
+const DeleteButton = ({onClickHandle}) => {
+    return(
+        <button onClick={onClickHandle}>Delete</button>
+    )
+}
+
+const Numbers = ({persons, deletePerson}) => (
     <ul>
         {persons.map(person => (
             <li key={person.id}>
-                {person.name} {person.number}
+               Name: {person.name} Phone: {person.number} <DeleteButton onClickHandle={deletePerson(person.id)}/>
             </li>
         ))}
     </ul>
