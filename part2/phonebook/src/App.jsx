@@ -60,9 +60,9 @@ const App = () => {
   }
 
   const updatePerson = (personId) => {
-    if(newNumber !== "" && !persons.reduce((found, person) => {
-      found || person.number == newNumber
-    },false)){
+    if (newNumber !== "" && !persons.reduce((found, person) => {
+      return found || person.number === newNumber
+    }, false)) {    
       const oldPerson = persons.find(person => person.id === personId)
       if(confirm(`Do you want to update ${oldPerson.name}'s number?`)){
         const updatedPerson = {... oldPerson, number: newNumber}
