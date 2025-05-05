@@ -4,6 +4,7 @@ const cors = require('cors')
 
 app.use(express.json())
 app.use(cors())
+app.use(express.static('dist'))
 
 let notes = [
   {
@@ -87,6 +88,28 @@ app.post('/api/notes', (request, response) => {
 
   response.json(note)
 })
+
+app.put('/api/notes/:id', (request, response) => {
+  console.log('PUT request received to /api/notes/:id', id)
+  const id = request.params.id
+  const body = request.body
+
+  const noteIndex = notes.findIndex(n => n.id === id)
+  if (noteIndex === -1) {
+    return response.status(404).json({ error: 'note not found' })
+  }
+
+  const updatedNote = {
+    ...notes[noteIndex],
+    content: body.content,
+    important: body.important
+  }
+
+  notes[noteIndex] = updatedNote
+
+  response.json(updatedNote)
+})
+
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
