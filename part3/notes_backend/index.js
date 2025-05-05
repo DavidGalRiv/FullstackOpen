@@ -90,8 +90,8 @@ app.post('/api/notes', (request, response) => {
 })
 
 app.put('/api/notes/:id', (request, response) => {
-  console.log('PUT request received to /api/notes/:id', id)
   const id = request.params.id
+  console.log('PUT request received to /api/notes/:id', id)
   const body = request.body
 
   const noteIndex = notes.findIndex(n => n.id === id)
