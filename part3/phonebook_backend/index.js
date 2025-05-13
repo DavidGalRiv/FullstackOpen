@@ -64,35 +64,52 @@ app.get("/info", (request, response) => {
    
 })
 
-// const generateId = () => {
-//     const maxId = persons.length > 0
-//         ? Math.max(...persons.map(n => Number(n.id)))
-//         : 0
-//     return String(maxId + 1)
-// }
 
-// app.post("/api/persons", (request, response) => {
-//     const {name, number} = request.body
-//     console.log("Request body:", request.body)
-//     if(!name || !number){
-//         return response.status(404).json({error: "name or number is missing"})
-//     }
+app.post("/api/persons", (request, response, next) => {
+    const {name, number} = request.body
 
-//     const nameExists = persons.some(person => person.name === name)
-//     if(nameExists){
-//         return response.status(404).json({error: "name must be unique"})
-//     }
+    console.log("Request body:", request.body)
+    if(!name || !number){
+        return response.status(404).json({error: "name or number is missing"})
+    }
 
-//     const person = new Person({
-//         id: generateId(),
-//         name,
-//         number,
-//     })
+    Person.findOne({name})
+      .then(existingPerson => {
+        if(existingPerson){
+          return response.status(404).json({error: "name must be unique"})
+        }
 
-//     person.save().then((savedPerson) =>{
-//         response.json(savedPerson)
-//     })
-// })
+        const person = new Person({
+          name,
+          number,
+        })
+
+      person.save()
+        .then(savedPerson =>response.json(savedPerson))
+        .catch(error => next.error)
+      })
+      .catch(error => next.error)
+  })
+    
+
+app.put("/api/persons/:id", (request, response, next) => {
+  const {name, number} = request.body
+
+  Person.findById(request.params.id)
+    .then((person) => {
+      if (!person) {
+        return response.status(404).end()
+      }
+
+      person.name = name
+      person.number = number
+
+      return person.save().then((updatedPerson) => {
+        response.json(updatedPerson)
+      })
+    })
+    .catch((error) => next(error))
+})
 
 app.delete("/api/persons/:id", (request, response, next) => {
     Person.findByIdAndDelete(request.params.id)
