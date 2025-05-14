@@ -66,8 +66,9 @@ const App = () => {
         }), 5000)
       })
       .catch(error => {
+        const errorMessage = error.response?.data?.error || "Something went wrong"
         setNotification({
-            text: `Something went wrong: ${error}`,
+            text: errorMessage,
             type: "error" 
           })
         setTimeout(() => setNotification({ 
@@ -116,8 +117,9 @@ const App = () => {
             })
             setPersons(persons.filter(p => p.id !== id))
           }else{
+            const errorMessage = error.response?.data?.error || "Could not update"
             setNotification({
-              text: `Could not updated: ${error}`,
+              text: errorMessage,
               type: "error"
             })
             setTimeout(() => setNotification({ 
@@ -176,7 +178,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notification.text} type={notification.type} />
+      <Notification message={notification?.text} type={notification?.type} />
       <Filter search={search} handleSearchChange={handleSearchChange} />
       <h3>Add a new contact</h3>
       <PersonForm
