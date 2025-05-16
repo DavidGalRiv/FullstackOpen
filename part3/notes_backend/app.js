@@ -7,6 +7,7 @@ const config = require('./utils/config')
 const logger = require('./utils/logger')
 const middleware = require('./utils/middleware')
 
+
 mongoose
   .connect(config.MONGODB_URI)
   .then(() => {
@@ -24,5 +25,6 @@ app.use('/api/notes', notesRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
+app.use(middleware.requestLogger)
 
 module.exports = app
