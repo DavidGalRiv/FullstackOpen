@@ -1,13 +1,13 @@
-const blogListsRouter = require('express').Router()
+const blogListRouter = require('express').Router()
 const BlogList = require('../models/blogList')
 
-blogListsRouter.get('/', (request, response) => {
+blogListRouter.get('/', (request, response) => {
   BlogList.find({}).then(blogLists => {
     response.json(blogLists)
   })
 })
 
-blogListsRouter.get('/:id', (request, response, next) => {
+blogListRouter.get('/:id', (request, response, next) => {
   BlogList.findById(request.params.id)
     .then(blogList => {
       if (blogList) {
@@ -19,7 +19,7 @@ blogListsRouter.get('/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-blogListsRouter.post('/', (request, response, next) => {
+blogListRouter.post('/', (request, response, next) => {
   const body = request.body
 
   const blogList = new BlogList({
@@ -36,7 +36,7 @@ blogListsRouter.post('/', (request, response, next) => {
     .catch(error => next(error))
 })
 
-blogListsRouter.delete('/:id', (request, response, next) => {
+blogListRouter.delete('/:id', (request, response, next) => {
   BlogList.findByIdAndDelete(request.params.id)
     .then(() => {
       response.status(204).end()
@@ -44,7 +44,7 @@ blogListsRouter.delete('/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-blogListsRouter.put('/:id', (request, response, next) => {
+blogListRouter.put('/:id', (request, response, next) => {
   const { title, author, url, likes } = request.body
 
   BlogList.findById(request.params.id)
@@ -65,4 +65,4 @@ blogListsRouter.put('/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-module.exports = blogListsRouter
+module.exports = blogListRouter
