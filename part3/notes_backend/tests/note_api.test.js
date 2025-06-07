@@ -15,7 +15,7 @@ const api = supertest(app)
 //   const noteObjects = helper.initialNotes.map(note => new Note(note))
 //   const promiseArray = noteObjects.map(note => note.save())
 //   await Promise.all(promiseArray)
-// }) Promise.all executes the promises it receives in parallel
+// }) Promise.all executes the promises it receives in parallel, NOT RECOMMENDED USE HERE BECASUE OF THAT
 
 // beforeEach(async () => {
 //   await Note.deleteMany({})
