@@ -9,16 +9,34 @@ const Note = require('../models/note')
 
 const api = supertest(app)
 
+// beforeEach(async () => {
+//   await Note.deleteMany({})
+
+//   const noteObjects = helper.initialNotes.map(note => new Note(note))
+//   const promiseArray = noteObjects.map(note => note.save())
+//   await Promise.all(promiseArray)
+// }) Promise.all executes the promises it receives in parallel
+
+// beforeEach(async () => {
+//   await Note.deleteMany({})
+//   await Note.insertMany(helper.initialNotes)
+// }) Mongoose's built-in method
+
 beforeEach(async () => {
   await Note.deleteMany({})
+  console.log('cleared')
 
   for(const note of helper.initialNotes){
     const noteObject = new Note(note)
     await noteObject.save()
+    console.log(`Note "${note.content}" saved`)
   }
+  console.log('done')
 })
 
 test('notes are returned as json', async () => {
+  console.log('entered test')
+
   await api
     .get('/api/notes')
     .expect(200)
@@ -26,6 +44,8 @@ test('notes are returned as json', async () => {
 })
 
 test('all notes are returned', async () => {
+  console.log('entered test')
+
   const response = await api.get('/api/notes')
 
 
@@ -33,6 +53,8 @@ test('all notes are returned', async () => {
 })
 
 test('a specific note is within the returned notes', async () => {
+  console.log('entered test')
+
   const response = await api.get('/api/notes')
 
   const contents = response.body.map(e => e.content)
@@ -40,6 +62,8 @@ test('a specific note is within the returned notes', async () => {
 })
 
 test('a valid note can be added ', async () => {
+  console.log('entered test')
+
   const newNote = {
     content: 'async/await simplifies making async calls',
     important: true,
@@ -61,6 +85,8 @@ test('a valid note can be added ', async () => {
 })
 
 test('note without content is not added', async () => {
+  console.log('entered test')
+
   const newNote = {
     important: true
   }
@@ -78,6 +104,8 @@ test('note without content is not added', async () => {
 })
 
 test('a specific note can be viewed', async () => {
+  console.log('entered test')
+
   const notesAtStart = await helper.notesInDb()
   const noteToView = notesAtStart[0]
 
@@ -91,6 +119,8 @@ test('a specific note can be viewed', async () => {
 })
 
 test('a note can be deleted', async () => {
+  console.log('entered test')
+
   const notesAtStart = await helper.notesInDb()
   const noteToDelete = notesAtStart[0]
 
