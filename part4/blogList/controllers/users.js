@@ -3,14 +3,13 @@ const usersRouter = require('express').Router()
 const User = require('../models/user')
 
 usersRouter.get('/', async (request, response) => {
-  const users = await User.find({})
+  const users = await User.find({}).populate('blogs', {title: 1, author: 1, url: 1})
   response.json(users)
 })
 
 usersRouter.post('/', async (request, response, next) => {
   const { username, name, password } = request.body
 
-  // Validación de username
   if (!username) {
     return response.status(400).json({
       error: 'Username is required'
@@ -23,7 +22,6 @@ usersRouter.post('/', async (request, response, next) => {
     })
   }
 
-  // Validación de password
   if (!password) {
     return response.status(400).json({
       error: 'Password is required'
