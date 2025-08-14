@@ -18,8 +18,8 @@ const Blog = ({ blog, user, onLike, handleDelete }) => {
   const showDeleteButton = blog.user?.username === user?.username
 
   return (
-    <div style={blogStyle}>
-      <div>
+    <div style={blogStyle} className='blog'>
+      <div className='blog-summary'>
         {blog.title} {blog.author}
         <button onClick = {toggleVisibility}>
           {visible ? 'hide' : 'view'}
@@ -27,7 +27,7 @@ const Blog = ({ blog, user, onLike, handleDelete }) => {
       </div>
 
       {visible && (
-        <div>
+        <div className='blog-details'>
           <div>{blog.url}</div>
           <div>
             likes {blog.likes} <button onClick = {() => onLike(blog)}>like</button>
