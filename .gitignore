@@ -20,3 +20,19 @@ node_modules
 *.njsproj
 *.sln
 *.sw?
+
+contraseñas usuarios:
+    username: mluukkai
+    password: salainen
+
+    username: hellas
+    password: hellas123
+
+    username: grace
+    password: cobol123
+
+    username: paco
+    password: paco123
+
+    username: jose
+    password: jose123

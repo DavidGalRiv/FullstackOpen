@@ -7,8 +7,11 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "dev": "cross-env NODE_ENV=development node --watch index.js",
     "test": "cross-env NODE_ENV=test node --test",
+    "start:test": "NODE_ENV=test node index.js",
     "build:ui": "rm -rf dist && cd ../../part2/notes && npm run build && cp -r dist ../../part3/notes_backend",
+    "deploy": "fly deploy",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
+    "logs:prod": "fly logs",
     "lint": "eslint ."
   },
   "author": "Matti Luukkainen",
@@ -24,7 +27,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.26.0",
+    "@playwright/test": "^1.54.2",
     "@stylistic/eslint-plugin-js": "^4.2.0",
+    "@types/node": "^24.3.0",
     "eslint": "^9.26.0",
     "globals": "^16.1.0",
     "supertest": "^7.1.1"
