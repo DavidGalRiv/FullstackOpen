@@ -15,11 +15,13 @@ const Blog = ({ blog, user, onLike, handleDelete }) => {
     marginBottom: 5
   }
 
-  const showDeleteButton = blog.user?.username === user?.username
+const showDeleteButton = 
+  (typeof blog.user === 'object' && blog.user?.username === user?.username)
+  || blog.user === user?.id
 
   return (
     <div style={blogStyle} className='blog'>
-      <div className='blog-summary'>
+      <div className='blog-summary' data-testid='blog-item'>
         {blog.title} {blog.author}
         <button onClick = {toggleVisibility}>
           {visible ? 'hide' : 'view'}

@@ -10,7 +10,14 @@ const Notification = ({ message }) => {
     borderRadius: '4px',
   }
 
-  return <div style={style}>{message.message}</div>
+  return (
+    <div
+      data-testid={message.type} 
+      style={style}
+    >
+      {message.message}
+    </div>
+  )
 }
 
 export default Notification

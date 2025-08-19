@@ -24,7 +24,9 @@
     "mongoose": "^8.15.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.54.2",
     "@stylistic/eslint-plugin-js": "^4.2.0",
+    "@types/node": "^24.3.0",
     "supertest": "^7.1.1"
   }
 }
