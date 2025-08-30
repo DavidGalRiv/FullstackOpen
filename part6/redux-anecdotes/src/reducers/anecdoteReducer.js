@@ -1,3 +1,4 @@
+// reducers/anecdoteReducer.js
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -8,22 +9,32 @@ const anecdotesAtStart = [
 ]
 
 const getId = () => (100000 * Math.random()).toFixed(0)
-
-const asObject = (anecdote) => {
-  return {
-    content: anecdote,
-    id: getId(),
-    votes: 0
-  }
-}
+const asObject = (anecdote) => ({ content: anecdote, id: getId(), votes: 0 })
 
 const initialState = anecdotesAtStart.map(asObject)
 
-const reducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
+export const voteAnecdote = (id) => ({
+  type: 'VOTE',
+  data: { id }
+})
 
-  return state
+export const createAnecdote = (content) => ({
+  type: 'NEW_ANECDOTE',
+  data: { content }
+})
+
+const anecdoteReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'VOTE': {
+      const id = action.data.id
+      return state.map(anecdote => anecdote.id !== id ? anecdote : { ...anecdote, votes: anecdote.votes + 1 })
+    }
+    case 'NEW_ANECDOTE': {
+      return state.concat(asObject(action.data.content))
+    }
+    default:
+      return state
+  }
 }
 
-export default reducer
+export default anecdoteReducer
