@@ -9,7 +9,7 @@ export const getAnecdotes = async () => {
 
 export const createAnecdote = async (content) => {
   if(content.length < 5){
-    throw new Error('Anecdote too short, must be 5 chars or more')
+    throw new Error(`Anecdote ${content} too short, must be 5 chars or more`)
   }
   const object = { content, votes: 0 }
   const response = await axios.post(baseUrl, object)
